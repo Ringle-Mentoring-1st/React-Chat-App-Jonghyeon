@@ -1,0 +1,44 @@
+.button {
+  font-weight: 700;
+  font-size: 16px;
+  padding: 16px 30px;
+  border: 0;
+  border-radius: 16px;
+  transition: box-shadow 0.2s, opacity 0.2s;
+
+  &:hover {
+    box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+    opacity: 0.9;
+  }
+}
+
+.large {
+  font-size: 18px;
+  padding: 20px 30px;
+}
+
+.medium {
+}
+
+.small {
+  font-size: 12px;
+  padding: 12px 30px;
+}
+
+.filled {
+  width: 100%;
+}
+
+.primary {
+  color: white;
+  background: #5f5cee;
+}
+
+.secondary {
+  color: #170016;
+  background: #ebddaa;
+}
+
+.default {
+  background: lightgray;
+}
