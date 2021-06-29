@@ -51,7 +51,13 @@ function LoginPage() {
         const uid = (currentUser || {}).uid;
         if (uid) {
           console.log(currentUser!.email);
-          dispatch(setUserProfile('hi'));
+
+          const payload = {
+            uid: uid,
+            email: currentUser!.email!,
+            nickName: ' ',
+          };
+          dispatch(setUserProfile(payload));
           history.push('/chat/list');
         } else {
           alert('해당하는 유저가 없습니다.');

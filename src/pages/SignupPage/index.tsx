@@ -1,7 +1,7 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks';
-import { setJwtToken } from '../../store/slices/userSlice';
+import { setJwtToken, setUserProfile } from '../../store/slices/userSlice';
 import './SignupPage.scss';
 
 //Components
@@ -13,7 +13,7 @@ import { ReactComponent as Logo } from '../../assets/logo.svg';
 
 // Utils
 import { emailValidator, pwValidator } from '../../utils/validator';
-import { app } from '../../utils/firebase';
+import { app, db, firebase } from '../../utils/firebase';
 
 function SignupPage() {
   const history = useHistory();
@@ -29,6 +29,19 @@ function SignupPage() {
 
   const [isAgreeInfo, setIsAgreeInfo] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    app.auth().onAuthStateChanged(user => {
+      const uid = (app.auth().currentUser || {}).uid;
+
+      if (uid) {
+        console.log('Home:', uid);
+        history.push('/chat/list');
+      } else {
+        console.log('Home:', uid);
+      }
+    });
+  }, []);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -74,6 +87,33 @@ function SignupPage() {
           if (uid) {
             //사인업 성공
             dispatch(setJwtToken(uid));
+
+            db.collection('user')
+              .doc(uid)
+              .set({
+                uid: uid,
+                nickName: nickName,
+                age: 20,
+                email: email,
+                created: firebase.firestore.Timestamp.now().seconds,
+              })
+              .then(ref => {
+                const payload = {
+                  uid: uid,
+                  email: email,
+                  nickName: nickName,
+                };
+
+                dispatch(setUserProfile(payload));
+                setSignupPayload({
+                  email: '',
+                  pw: '',
+                  nickName: '',
+                  isAgreeInfo: false,
+                  signupPath: '',
+                });
+              });
+
             history.push('/chat/list');
           } else {
             alert('error');

@@ -25,7 +25,10 @@ export const userSlice = createSlice({
     setJwtToken: (state, action: PayloadAction<string>) => {
       state.jwtToken = action.payload;
     },
-    setUserProfile: (state, action: PayloadAction<string>) => {
+    setUserProfile: (
+      state,
+      action: PayloadAction<{ uid: string; email: string; nickName: string }>
+    ) => {
       state.userProfile = action.payload;
     },
     SecondSaga: (state, action: PayloadAction<string>) => {
