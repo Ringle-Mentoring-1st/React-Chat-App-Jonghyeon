@@ -1,5 +1,7 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { useAppDispatch } from '../../store/hooks';
+import { setJwtToken } from '../../store/slices/userSlice';
 import './SignupPage.scss';
 
 //Components
@@ -11,8 +13,12 @@ import { ReactComponent as Logo } from '../../assets/logo.svg';
 
 // Utils
 import { emailValidator, pwValidator } from '../../utils/validator';
+import { app } from '../../utils/firebase';
 
 function SignupPage() {
+  const history = useHistory();
+  const dispatch = useAppDispatch();
+
   const [signupPayload, setSignupPayload] = useState({
     email: '',
     pw: '',
@@ -22,6 +28,7 @@ function SignupPage() {
   });
 
   const [isAgreeInfo, setIsAgreeInfo] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -56,7 +63,32 @@ function SignupPage() {
         isAgreeInfo,
         signupPath,
       };
-      return console.log(payload);
+
+      app
+        .auth()
+        .createUserWithEmailAndPassword(payload.email, payload.pw)
+        .then(user => {
+          console.log(user);
+          const uid = (app.auth().currentUser || {}).uid;
+
+          if (uid) {
+            //사인업 성공
+            dispatch(setJwtToken(uid));
+            history.push('/chat/list');
+          } else {
+            alert('error');
+          }
+          setLoading(false);
+        })
+        .catch(error => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+
+          setLoading(false);
+        });
+
+      console.log(payload);
     }
   };
 
