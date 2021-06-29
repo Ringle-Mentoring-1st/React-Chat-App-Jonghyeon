@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.scss';
 
 // Components
 import Button from '../../ui/Button';
-import Container from '../../ui/Container';
 
 // Assets
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 
 function HomePage() {
   return (
-    <Container>
+    <Fragment>
       <div className="flexbox">
         <div className="title">
           <Logo className="logo" />
@@ -32,7 +31,7 @@ function HomePage() {
           </p>
         </div>
       </div>
-    </Container>
+    </Fragment>
   );
 }
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './SignupPage.scss';
 
 function SignupPage() {
   const [email, setEmail] = useState('');

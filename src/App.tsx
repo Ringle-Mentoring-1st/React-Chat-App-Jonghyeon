@@ -7,16 +7,21 @@ import HomePage from './pages/HomePage';
 import Login from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 
+// Components
+import Container from './ui/Container';
+
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" component={HomePage} exact />
-          <Route path="/login" component={Login} exact />
-          <Route path="/signup" component={SignupPage} exact />
-        </Switch>
-      </BrowserRouter>
+      <Container>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/" component={HomePage} exact />
+            <Route path="/login" component={Login} exact />
+            <Route path="/signup" component={SignupPage} exact />
+          </Switch>
+        </BrowserRouter>
+      </Container>
     </div>
   );
 }
