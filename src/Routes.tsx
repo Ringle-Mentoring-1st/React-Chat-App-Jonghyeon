@@ -8,16 +8,23 @@ import Signup from './pages/SignupPage';
 import ChatList from './pages/ChatListPage';
 import Chat from './pages/ChatPage';
 
+// Components
+import Container from './ui/Container';
+import NavBar from './components/NavBar';
+
 function Routes() {
   return (
     <Router>
-      <Switch>
-        <Route path="/" component={Home} exact />
-        <Route path="/login" component={Login} exact />
-        <Route path="/signup" component={Signup} exact />
-        <Route path="/chat/list" component={ChatList} exact />
-        <Route path="/chat/room/:roomId" component={Chat} exact />
-      </Switch>
+      <NavBar />
+      <Container>
+        <Switch>
+          <Route path="/" component={Home} exact />
+          <Route path="/login" component={Login} exact />
+          <Route path="/signup" component={Signup} exact />
+          <Route path="/chat/list" component={ChatList} exact />
+          <Route path="/chat/room/:roomId" component={Chat} exact />
+        </Switch>
+      </Container>
     </Router>
   );
 }

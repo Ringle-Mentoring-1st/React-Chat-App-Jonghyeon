@@ -5,7 +5,7 @@ interface ButtonProps {
   color?: 'primary' | 'secondary' | 'default';
   size?: 'large' | 'medium' | 'small';
   fill?: boolean;
-  onClick?: () => {};
+  onClick?: () => {} | void;
   children: ReactChild | ReactChildren;
 }
 

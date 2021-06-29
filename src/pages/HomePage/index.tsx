@@ -1,14 +1,31 @@
-import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Fragment, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import './HomePage.scss';
-
 // Components
 import Button from '../../ui/Button';
-
 // Assets
 import { ReactComponent as Logo } from '../../assets/logo.svg';
+// Utils
+import { app } from '../../utils/firebase';
 
 function HomePage() {
+  const history = useHistory();
+
+  useEffect(() => {
+    app.auth().onAuthStateChanged(user => {
+      const uid = (app.auth().currentUser || {}).uid;
+      console.log(user);
+
+      if (uid) {
+        console.log('Home:', uid);
+
+        history.push('/chat/list');
+      } else {
+        console.log('Home:', uid);
+      }
+    });
+  }, []);
+
   return (
     <Fragment>
       <div className="flexbox">

@@ -1,7 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setJwtToken } from '../../store/slices/userSlice';
+import { useAppSelector } from '../../store/hooks';
 import './LoginPage.scss';
 
 //Components
@@ -11,13 +10,30 @@ import TextInput from '../../ui/TextInput';
 // Assets
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 
+// Utils
+import { app } from '../../utils/firebase';
+
 function LoginPage() {
   const history = useHistory();
   const { jwtToken } = useAppSelector(state => state.user);
-  const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
+
+  useEffect(() => {
+    app.auth().onAuthStateChanged(user => {
+      const uid = (app.auth().currentUser || {}).uid;
+      console.log(user);
+
+      if (uid) {
+        console.log('Home:', uid);
+
+        history.push('/chat/list');
+      } else {
+        console.log('Home:', uid);
+      }
+    });
+  }, []);
 
   const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -39,8 +55,6 @@ function LoginPage() {
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    dispatch(setJwtToken(makeFakeid(8)));
   };
 
   return (
