@@ -1,5 +1,7 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { setJwtToken } from '../../store/slices/userSlice';
 import './LoginPage.scss';
 
 //Components
@@ -10,6 +12,10 @@ import TextInput from '../../ui/TextInput';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 
 function LoginPage() {
+  const history = useHistory();
+  const { jwtToken } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
 
@@ -20,16 +26,32 @@ function LoginPage() {
     setPw(e.target.value);
   };
 
-  const submitHandler = () => {};
+  const makeFakeid = (length: number) => {
+    var result = '';
+    var characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
+
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    dispatch(setJwtToken(makeFakeid(8)));
+  };
 
   return (
     <Fragment>
       <div className="flexbox">
+        {jwtToken}
         <div className="title">
           <Logo className="logo" />
           <h1>로그인하고 친구들과 커피챗</h1>
         </div>
-        <form onSubmit={submitHandler}>
+        <form onSubmit={e => submitHandler(e)}>
           <TextInput
             type="text"
             value={email}
