@@ -1,23 +1,23 @@
 import React from 'react';
-import './Input.scss';
+import './TextInput.scss';
 
-interface InputProps {
-  type: 'text' | 'password';
-  value: string;
+interface TextInputProps {
+  type: 'text' | 'password' | 'checkbox';
+  value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   fill?: boolean;
   style?: any;
 }
 
-function Input({
+function TextInput({
   type,
   value,
   onChange,
   placeholder,
   fill,
   ...props
-}: InputProps) {
+}: TextInputProps) {
   return (
     <input
       type={type}
@@ -30,4 +30,4 @@ function Input({
   );
 }
 
-export default Input;
+export default TextInput;

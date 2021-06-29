@@ -5,6 +5,7 @@ interface ButtonProps {
   color?: 'primary' | 'secondary' | 'default';
   size?: 'large' | 'medium' | 'small';
   fill?: boolean;
+  onClick?: () => {};
   children: ReactChild | ReactChildren;
 }
 
@@ -13,11 +14,13 @@ export default function Button({
   size,
   fill,
   children,
+  onClick,
   ...props
 }: ButtonProps) {
   return (
     <button
       className={`button ${size} ${fill ? 'filled' : ''} ${color}`}
+      onClick={onClick}
       {...props}
     >
       {children}

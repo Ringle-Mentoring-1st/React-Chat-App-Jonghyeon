@@ -3,7 +3,7 @@ import './LoginPage.scss';
 
 //Components
 import Button from '../../ui/Button';
-import Input from '../../ui/Input';
+import TextInput from '../../ui/TextInput';
 
 // Assets
 import { ReactComponent as Logo } from '../../assets/logo.svg';
@@ -11,9 +11,6 @@ import { ReactComponent as Logo } from '../../assets/logo.svg';
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
-  const [nickName, setNickName] = useState('');
-  const [isAgreeInfo, setIsAgreeInfo] = useState(false);
-  const [signupPath, setSignupPath] = useState('');
 
   const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -32,13 +29,13 @@ function LoginPage() {
           <h1>로그인하고 친구들과 커피챗</h1>
         </div>
         <form onSubmit={submitHandler}>
-          <Input
+          <TextInput
             type="text"
             value={email}
             onChange={e => emailChangeHandler(e)}
             placeholder="이메일을 입력해주세요"
           />
-          <Input
+          <TextInput
             type="password"
             value={pw}
             onChange={e => passwordChangeHandler(e)}
