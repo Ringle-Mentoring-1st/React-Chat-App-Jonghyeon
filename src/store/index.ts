@@ -1,10 +1,24 @@
-import { userSlice } from './slices';
-import { configureStore } from '@reduxjs/toolkit';
+import { userReducer } from './slices';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
+const rootReducer = combineReducers({
+  user: userReducer,
+});
+
+const persistConfig = {
+  key: 'root',
+  storage,
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// How to install Redux-persist on Redux-toolkit
+// https://edvins.io/how-to-use-redux-persist-with-redux-toolkit
 
 export const store = configureStore({
-  reducer: {
-    user: userSlice,
-  },
+  reducer: persistedReducer,
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
