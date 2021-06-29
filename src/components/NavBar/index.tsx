@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import './NavBar.scss';
+// Redux
+import { useAppDispatch } from '../../store/hooks';
+import { logout } from '../../store/slices/userSlice';
 // Assets
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 // Components
@@ -10,9 +13,11 @@ import { app } from '../../utils/firebase';
 
 function NavBar() {
   const history = useHistory();
+  const dispatch = useAppDispatch();
 
   const logOut = () => {
     app.auth().signOut();
+    dispatch(logout());
     history.push('/');
   };
 

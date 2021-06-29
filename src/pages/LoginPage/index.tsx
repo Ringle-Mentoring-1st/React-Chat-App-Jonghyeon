@@ -1,21 +1,20 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { useAppSelector } from '../../store/hooks';
 import './LoginPage.scss';
-
+// Redux
+import { useAppDispatch } from '../../store/hooks';
+import { setUserProfile } from '../../store/slices/userSlice';
 //Components
 import Button from '../../ui/Button';
 import TextInput from '../../ui/TextInput';
-
 // Assets
 import { ReactComponent as Logo } from '../../assets/logo.svg';
-
 // Utils
 import { app } from '../../utils/firebase';
 
 function LoginPage() {
   const history = useHistory();
-  const { jwtToken } = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
@@ -27,7 +26,6 @@ function LoginPage() {
 
       if (uid) {
         console.log('Home:', uid);
-
         history.push('/chat/list');
       } else {
         console.log('Home:', uid);
@@ -42,25 +40,31 @@ function LoginPage() {
     setPw(e.target.value);
   };
 
-  const makeFakeid = (length: number) => {
-    var result = '';
-    var characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
-
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    app
+      .auth()
+      .signInWithEmailAndPassword(email, pw)
+      .then(user => {
+        const currentUser = app.auth().currentUser;
+        const uid = (currentUser || {}).uid;
+        if (uid) {
+          console.log(currentUser!.email);
+          dispatch(setUserProfile('hi'));
+          history.push('/chat/list');
+        } else {
+          alert('해당하는 유저가 없습니다.');
+        }
+      })
+      .catch(error => {
+        const errorMessage = error.message;
+      });
   };
 
   return (
     <Fragment>
       <div className="flexbox">
-        {jwtToken}
         <div className="title">
           <Logo className="logo" />
           <h1>로그인하고 친구들과 커피챗</h1>

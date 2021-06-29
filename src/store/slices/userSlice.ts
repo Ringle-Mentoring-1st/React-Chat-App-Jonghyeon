@@ -2,21 +2,26 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
 
 interface UserState {
-  jwtToken: string;
-  userProfile: string;
+  jwtToken: string | null;
+  userProfile: any | null;
   message: string;
 }
 
-const initialState = {
-  jwtToken: '',
-  userProfile: '',
+const initialState: UserState = {
+  jwtToken: null,
+  userProfile: null,
   message: '',
-} as UserState;
+};
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    logout: state => {
+      state.jwtToken = initialState.jwtToken;
+      state.userProfile = initialState.userProfile;
+      state.message = initialState.message;
+    },
     setJwtToken: (state, action: PayloadAction<string>) => {
       state.jwtToken = action.payload;
     },
@@ -29,7 +34,8 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setJwtToken, setUserProfile, SecondSaga } = userSlice.actions;
+export const { logout, setJwtToken, setUserProfile, SecondSaga } =
+  userSlice.actions;
 
 export const selectUser = (state: RootState) => state.user;
 

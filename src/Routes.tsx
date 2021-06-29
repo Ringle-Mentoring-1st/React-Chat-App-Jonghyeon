@@ -11,11 +11,13 @@ import Chat from './pages/ChatPage';
 // Components
 import Container from './ui/Container';
 import NavBar from './components/NavBar';
+import { useAppSelector } from './store/hooks';
 
 function Routes() {
+  const userProfile = useAppSelector(state => state.user.userProfile);
   return (
     <Router>
-      <NavBar />
+      {userProfile && <NavBar />}
       <Container>
         <Switch>
           <Route path="/" component={Home} exact />
