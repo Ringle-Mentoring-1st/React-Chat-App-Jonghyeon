@@ -13,26 +13,26 @@ import { ReactComponent as Logo } from '../../assets/logo.svg';
 import { emailValidator, pwValidator } from '../../utils/validator';
 
 function SignupPage() {
-  const [email, setEmail] = useState('');
-  const [pw, setPw] = useState('');
-  const [nickName, setNickName] = useState('');
+  const [signupPayload, setSignupPayload] = useState({
+    email: '',
+    pw: '',
+    nickName: '',
+    isAgreeInfo: false,
+    signupPath: '',
+  });
+
   const [isAgreeInfo, setIsAgreeInfo] = useState(false);
-  const [signupPath, setSignupPath] = useState('');
 
-  const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setEmail(e.target.value);
-
-  const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setPw(e.target.value);
-
-  const nickNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setNickName(e.target.value);
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    key: 'email' | 'pw' | 'nickName' | 'signupPath'
+  ) => {
+    const cp = { ...signupPayload };
+    cp[key] = e.target.value;
+    setSignupPayload(cp);
+  };
 
   const isAgreeInfoChangeHandler = () => setIsAgreeInfo(prev => !prev);
-
-  const signupPathChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSignupPath(e.target.value);
-  };
 
   const onSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +60,8 @@ function SignupPage() {
     }
   };
 
+  const { email, pw, nickName, signupPath } = signupPayload;
+
   return (
     <Fragment>
       <div className="flexbox">
@@ -71,25 +73,25 @@ function SignupPage() {
           <TextInput
             type="text"
             value={email}
-            onChange={emailChangeHandler}
+            onChange={e => onChange(e, 'email')}
             placeholder="이메일을 입력해주세요"
           />
           <TextInput
             type="password"
             value={pw}
-            onChange={passwordChangeHandler}
+            onChange={e => onChange(e, 'pw')}
             placeholder="비밀번호를 입력해주세요"
           />
           <TextInput
             type="text"
             value={nickName}
-            onChange={nickNameChangeHandler}
+            onChange={e => onChange(e, 'nickName')}
             placeholder="닉네임를 입력해주세요"
           />
           <select
             name="pets"
             value={signupPath}
-            onChange={signupPathChangeHandler}
+            onChange={e => onChange(e, 'signupPath')}
           >
             <option value="">어떤 경로로 커피챗을 알게 됐나요?</option>
             <option value="ad">광고</option>
