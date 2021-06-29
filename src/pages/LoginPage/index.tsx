@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './LoginPage.scss';
 
 //Components
@@ -45,6 +46,12 @@ function LoginPage() {
             로그인하기
           </Button>
         </form>
+        <p>
+          아직 회원이 아니라면?{' '}
+          <Link to="/signup">
+            <span>회원가입하기</span>
+          </Link>
+        </p>
       </div>
     </Fragment>
   );
