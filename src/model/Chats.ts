@@ -3,3 +3,8 @@ export interface ChatRoom {
   password: string;
   id: string;
 }
+export interface Chat {
+  content: string;
+  uidOfUser: string;
+  id: string;
+}
