@@ -29,6 +29,28 @@
     width: 100%;
   }
 
+  &.outlined {
+    border: 1px solid white;
+
+    &.primary {
+      color: #5f5cee;
+      background: 0;
+      border: 1px solid #5f5cee;
+    }
+
+    &.secondary {
+      color: #ebddaa;
+      background: 0;
+      border: 1px solid #ebddaa;
+    }
+
+    &.default {
+      color: white;
+      background: 0;
+      border: 1px solid white;
+    }
+  }
+
   &.primary {
     color: white;
     background: #5f5cee;

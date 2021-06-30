@@ -2,6 +2,7 @@ import React, { ReactChild, ReactChildren } from 'react';
 import './styles.scss';
 
 interface ButtonProps {
+  variant?: 'outlined';
   color?: 'primary' | 'secondary' | 'default';
   size?: 'large' | 'medium' | 'small';
   fill?: boolean;
@@ -10,6 +11,7 @@ interface ButtonProps {
 }
 
 export default function Button({
+  variant,
   color,
   size,
   fill,
@@ -19,7 +21,9 @@ export default function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`button ${size} ${fill ? 'filled' : ''} ${color}`}
+      className={`button ${size} ${fill ? 'filled' : ''} ${color} ${
+        variant ? variant : ''
+      }`}
       onClick={onClick}
       {...props}
     >
