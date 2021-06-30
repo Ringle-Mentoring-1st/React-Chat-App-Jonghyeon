@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import './LoginPage.scss';
+import './styles.scss';
 // Redux
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setUserProfile } from '../../store/slices/userSlice';
 //Components
 import Button from '../../ui/Button';
@@ -10,7 +10,7 @@ import TextInput from '../../ui/TextInput';
 // Assets
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 // Utils
-import { app } from '../../utils/firebase';
+import { app, db } from '../../utils/firebase';
 
 function LoginPage() {
   const history = useHistory();
@@ -50,15 +50,19 @@ function LoginPage() {
         const currentUser = app.auth().currentUser;
         const uid = (currentUser || {}).uid;
         if (uid) {
-          console.log(currentUser!.email);
+          db.doc(`user/${uid}`)
+            .get()
+            .then(doc => {
+              const payload = {
+                uid,
+                email: currentUser!.email!,
+                nickName: '',
+              };
+              payload.nickName = doc.data()!.nickName;
+              dispatch(setUserProfile(payload));
 
-          const payload = {
-            uid: uid,
-            email: currentUser!.email!,
-            nickName: ' ',
-          };
-          dispatch(setUserProfile(payload));
-          history.push('/chat/list');
+              history.push('/chat/list');
+            });
         } else {
           alert('해당하는 유저가 없습니다.');
         }
