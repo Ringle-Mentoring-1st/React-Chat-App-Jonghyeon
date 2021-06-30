@@ -11,8 +11,6 @@ function ChatPage() {
   const [chats, setChats] = useState<Chat[]>([]);
 
   useEffect(() => {
-    console.log('useEffect First', chats);
-
     const chatsRef = db.collection('Chatrooms').doc(roomId).collection('Chats');
     const unsubscribe = chatsRef.orderBy('createdAt').onSnapshot(snapshot => {
       console.log(snapshot.docChanges());
@@ -26,7 +24,6 @@ function ChatPage() {
         }
       });
     });
-    console.log('useEffect Second', chats);
 
     return () => {
       unsubscribe();
@@ -48,7 +45,6 @@ function ChatPage() {
                 borderRadius: 16,
               }}
             >
-              {' '}
               {chat.content}
             </div>
           </li>

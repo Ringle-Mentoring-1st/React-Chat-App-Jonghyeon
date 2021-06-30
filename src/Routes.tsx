@@ -6,6 +6,7 @@ import Home from './pages/HomePage';
 import Login from './pages/LoginPage';
 import Signup from './pages/SignupPage';
 import ChatList from './pages/ChatListPage';
+import ChatCreatePage from './pages/ChatCreatePage';
 import Chat from './pages/ChatPage';
 
 // Components
@@ -24,6 +25,7 @@ function Routes() {
           <Route path="/login" component={Login} exact />
           <Route path="/signup" component={Signup} exact />
           <Route path="/chat/list" component={ChatList} exact />
+          <Route path="/chat/list/create" component={ChatCreatePage} exact />
           <Route path="/chat/room/:roomId" component={Chat} exact />
         </Switch>
       </Container>

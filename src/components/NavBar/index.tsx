@@ -43,7 +43,19 @@ function NavBar() {
       </Link>
       <ul style={{ display: 'flex', listStyle: 'none' }}>
         <li>
-          <Button color="primary" size="small" onClick={logOut}>
+          <Link to="/chat/list/create">
+            <Button variant="outlined" color="secondary" size="small">
+              +
+            </Button>
+          </Link>
+        </li>
+        <li>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={logOut}
+          >
             로그아웃
           </Button>
         </li>
