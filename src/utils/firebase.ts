@@ -12,4 +12,6 @@ const app = firebase.initializeApp({
 
 const db = app.firestore();
 
-export { db, app, firebase };
+const nowSecond = firebase.firestore.Timestamp.now().seconds;
+
+export { db, app, firebase, nowSecond };
