@@ -2,8 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks';
 import { setJwtToken, setUserProfile } from '../../store/slices/userSlice';
-import './SignupPage.scss';
-
+import './styles.scss';
 //Components
 import Button from '../../ui/Button';
 import TextInput from '../../ui/TextInput';

@@ -1,5 +1,5 @@
 import React, { ReactChild, ReactChildren } from 'react';
-import './Button.scss';
+import './styles.scss';
 
 interface ButtonProps {
   color?: 'primary' | 'secondary' | 'default';

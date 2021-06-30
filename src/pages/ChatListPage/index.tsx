@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../../utils/firebase';
+import './styles.scss';
 // Model
 import { ChatRoom } from '../../model/Chats';
 import RoomItem from '../../components/RoomItem';

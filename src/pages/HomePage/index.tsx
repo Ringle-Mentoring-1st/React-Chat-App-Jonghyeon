@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import './HomePage.scss';
+import './styles.scss';
 // Components
 import Button from '../../ui/Button';
 // Assets

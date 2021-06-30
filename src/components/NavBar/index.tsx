@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import './NavBar.scss';
+import './styles.scss';
 // Redux
 import { useAppDispatch } from '../../store/hooks';
 import { logout } from '../../store/slices/userSlice';

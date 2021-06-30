@@ -1,5 +1,5 @@
 import React from 'react';
-import './TextInput.scss';
+import './styles.scss';
 
 interface TextInputProps {
   type: 'text' | 'password' | 'checkbox';
