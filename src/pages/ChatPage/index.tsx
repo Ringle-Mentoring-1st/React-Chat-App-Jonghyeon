@@ -1,36 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import './styles.scss';
 import { db } from '../../utils/firebase';
 import { Chat } from '../../model/Chats';
-import Button from '../../ui/Button';
-import TextInput from '../../ui/TextInput';
+
+import ChatBottomInput from '../../components/ChatBottomInput';
 
 function ChatPage() {
   const { roomId }: { roomId: string } = useParams();
-
   const [chats, setChats] = useState<Chat[]>([]);
 
   useEffect(() => {
-    const newChats: Chat | any[] = [];
+    console.log('useEffect First', chats);
 
-    db.doc(`Chatrooms/${roomId}`)
-      .collection('Chats')
-      .get()
-      .then(collection => {
-        const chats = collection.docs;
-        chats.forEach(chatDoc => {
-          const chatData = chatDoc.data();
-          chatData.id = chatDoc.id;
+    const chatsRef = db.collection('Chatrooms').doc(roomId).collection('Chats');
+    const unsubscribe = chatsRef.orderBy('createdAt').onSnapshot(snapshot => {
+      console.log(snapshot.docChanges());
 
-          newChats.push(chatData);
-        });
-        setChats(newChats);
+      snapshot.docChanges().forEach(change => {
+        if (change.type === 'added') {
+          const newChat = change.doc.data() as Chat;
+          setChats(prevChats => [...prevChats, newChat]);
+        } else if (change.type === 'removed') {
+          console.log(change, change.type);
+        }
       });
-  }, []);
+    });
+    console.log('useEffect Second', chats);
 
-  const changeHandler = () => {
-    console.log('change');
-  };
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <div>
@@ -38,15 +39,22 @@ function ChatPage() {
       <ul>
         {chats.map(chat => (
           <li key={chat.id}>
-            {console.log(chat)}
-            <div> {chat.content}</div>
+            <div
+              style={{
+                textAlign: 'left',
+                padding: '16px 26px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                margin: '0 16px 12px 16px',
+                borderRadius: 16,
+              }}
+            >
+              {' '}
+              {chat.content}
+            </div>
           </li>
         ))}
       </ul>
-      <div>
-        <TextInput type="text" value="" onChange={changeHandler} />{' '}
-        <Button color="primary">보내기</Button>
-      </div>
+      <ChatBottomInput roomId={roomId} />
     </div>
   );
 }

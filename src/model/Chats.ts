@@ -6,5 +6,6 @@ export interface ChatRoom {
 export interface Chat {
   content: string;
   uidOfUser: string;
-  id: string;
+  createdAt: number;
+  id?: string;
 }
