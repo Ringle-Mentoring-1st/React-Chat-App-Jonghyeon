@@ -5,6 +5,7 @@ import { db } from '../../utils/firebase';
 import { Chat } from '../../model/Chats';
 
 import ChatBottomInput from '../../components/ChatBottomInput';
+import ChatItem from '../../components/ChatItem';
 
 function ChatPage() {
   const { roomId }: { roomId: string } = useParams();
@@ -13,12 +14,25 @@ function ChatPage() {
   useEffect(() => {
     const chatsRef = db.collection('Chatrooms').doc(roomId).collection('Chats');
     const unsubscribe = chatsRef.orderBy('createdAt').onSnapshot(snapshot => {
-      console.log(snapshot.docChanges());
-
       snapshot.docChanges().forEach(change => {
         if (change.type === 'added') {
           const newChat = change.doc.data() as Chat;
+          newChat.id = change.doc.id;
           setChats(prevChats => [...prevChats, newChat]);
+        } else if (change.type === 'modified') {
+          const data = change.doc.data() as Chat;
+
+          setChats(prevChats => {
+            const newChats = prevChats.map(chat => {
+              if (chat.id === change.doc.id) {
+                return data;
+              }
+              return chat;
+            });
+            console.log(newChats);
+
+            return newChats;
+          });
         } else if (change.type === 'removed') {
           console.log(change, change.type);
         }
@@ -35,19 +49,7 @@ function ChatPage() {
       <h1>ChatPage</h1>
       <ul>
         {chats.map(chat => (
-          <li key={chat.id}>
-            <div
-              style={{
-                textAlign: 'left',
-                padding: '16px 26px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                margin: '0 16px 12px 16px',
-                borderRadius: 16,
-              }}
-            >
-              {chat.content}
-            </div>
-          </li>
+          <ChatItem key={chat.id} item={chat} />
         ))}
       </ul>
       <ChatBottomInput roomId={roomId} />

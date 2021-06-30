@@ -5,7 +5,8 @@ export interface ChatRoom {
 }
 export interface Chat {
   content: string;
-  uidOfUser: string;
+  uid: string;
   createdAt: number;
   id?: string;
+  liked: boolean;
 }
