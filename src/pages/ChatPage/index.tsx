@@ -20,19 +20,11 @@ function ChatPage() {
           newChat.id = change.doc.id;
           setChats(prevChats => [...prevChats, newChat]);
         } else if (change.type === 'modified') {
-          const data = change.doc.data() as Chat;
-
-          setChats(prevChats => {
-            const newChats = prevChats.map(chat => {
-              if (chat.id === change.doc.id) {
-                return data;
-              }
-              return chat;
-            });
-            console.log(newChats);
-
-            return newChats;
-          });
+          const newChat = change.doc.data() as Chat;
+          newChat.id = change.doc.id;
+          setChats(prevChats =>
+            prevChats.map(prev => (prev.id === newChat.id ? newChat : prev))
+          );
         } else if (change.type === 'removed') {
           console.log(change, change.type);
         }

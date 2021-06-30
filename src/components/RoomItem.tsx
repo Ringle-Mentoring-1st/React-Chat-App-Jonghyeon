@@ -8,8 +8,8 @@ interface RoomItemProps {
 
 function RoomItem({ item }: RoomItemProps) {
   return (
-    <Link to={`/chat/room/${item.id}`}>
-      <li key={item.id}>
+    <li key={item.id}>
+      <Link to={`/chat/room/${item.id}`}>
         <div
           style={{
             background: 'rgba(255,255,255,0.08)',
@@ -20,10 +20,10 @@ function RoomItem({ item }: RoomItemProps) {
           }}
         >
           <h2>{item.title}</h2>
-          <text>{item.id}</text>
+          {item.id}
         </div>
-      </li>
-    </Link>
+      </Link>
+    </li>
   );
 }
 

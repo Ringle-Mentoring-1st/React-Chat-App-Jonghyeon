@@ -16,7 +16,8 @@ function ChatItem({ item }: ChatItemProps) {
 
   useEffect(() => {
     setLiked(item.liked);
-  }, []);
+    // 내용 계속 업데이트
+  });
 
   const clickHandler = (e: React.UIEvent<HTMLLIElement>) => {
     if (e.detail === 1) {
@@ -26,13 +27,16 @@ function ChatItem({ item }: ChatItemProps) {
   };
 
   const onDoubleClick = () => {
+    // 뷰에서 즉각적인 좋아요
+    setLiked(prev => !prev);
     const chatDoc = db
       .collection('Chatrooms')
       .doc(roomId)
       .collection('Chats')
       .doc(item.id)
       .update({ liked: !item.liked })
-      .then(() => {
+      .catch(() => {
+        // 에러 시 뷰의 좋아요 취소
         setLiked(prev => !prev);
       });
     console.log(chatDoc);
