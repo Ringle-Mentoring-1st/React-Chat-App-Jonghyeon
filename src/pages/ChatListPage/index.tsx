@@ -1,18 +1,41 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { db } from '../../utils/firebase';
+// Model
+import { ChatRoom } from '../../model/Chats';
+import RoomItem from '../../components/RoomItem';
 
 function ChatListPage() {
+  const [rooms, setRooms] = useState<ChatRoom[]>([]);
+
   useEffect(() => {
+    const result: ChatRoom[] = [];
     db.collection('Chatrooms')
       .get()
       .then(collection => {
-        const myChatrooms = collection.docs;
-        if (myChatrooms.length) {
+        const myRooms = collection.docs;
+        if (myRooms.length) {
+          myRooms.forEach(roomDoc => {
+            const newData: ChatRoom = { title: '', password: '', id: '' };
+            const roomData = roomDoc.data();
+            newData.id = roomDoc.id;
+            newData.title = roomData.title;
+            newData.password = roomData.password;
+            result.push(newData);
+          });
         }
+        setRooms(result);
       });
   }, []);
 
-  return <div>ChatListPage</div>;
+  return !rooms.length ? (
+    <div>Loading</div>
+  ) : (
+    <ul>
+      {rooms.map(room => (
+        <RoomItem item={room} />
+      ))}
+    </ul>
+  );
 }
 
 export default ChatListPage;
