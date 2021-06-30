@@ -33,7 +33,7 @@ function ChatListPage() {
   ) : (
     <ul>
       {rooms.map(room => (
-        <RoomItem item={room} />
+        <RoomItem key={room.id} item={room} />
       ))}
     </ul>
   );
