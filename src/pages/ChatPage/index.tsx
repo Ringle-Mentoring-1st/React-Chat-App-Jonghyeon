@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './styles.scss';
 import { db, nowSecond } from '../../utils/firebase';
-import { Chat } from '../../model/Chats';
+import { Chat, LivePerson } from '../../model/Chats';
 
 import ChatBottomInput from '../../components/ChatBottomInput';
 import ChatItem from '../../components/ChatItem';
@@ -11,9 +11,7 @@ import { useAppSelector } from '../../store/hooks';
 function ChatPage() {
   const { roomId }: { roomId: string } = useParams();
   const [chats, setChats] = useState<Chat[]>([]);
-  const [livePeople, setLivePeople] = useState<
-    { nickName: string; uid: string }[]
-  >([]);
+  const [livePeople, setLivePeople] = useState<LivePerson[]>([]);
   const { uid, nickName } = useAppSelector(state => state.user.userProfile);
 
   useEffect(() => {
@@ -60,9 +58,12 @@ function ChatPage() {
       .doc(roomId)
       .collection('livePeople');
     const unsubscribeLivePeople = livePeopleRef.onSnapshot(snapshot => {
+      const MINUTE_SENSITIVITY_liveAt = 30;
       snapshot.docChanges().forEach(change => {
         if (change.type === 'added') {
-          const person = change.doc.data() as { nickName: string; uid: string };
+          const person = change.doc.data() as LivePerson;
+          if (person.liveAt < nowSecond() - MINUTE_SENSITIVITY_liveAt * 60)
+            return;
           person.uid = change.doc.id;
           setLivePeople(prev => [...prev, person]);
         } else if (change.type === 'removed') {

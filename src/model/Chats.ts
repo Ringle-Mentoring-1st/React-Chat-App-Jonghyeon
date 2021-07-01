@@ -10,3 +10,9 @@ export interface Chat {
   id?: string;
   liked: boolean;
 }
+
+export interface LivePerson {
+  nickName: string;
+  uid: string;
+  liveAt: number;
+}
