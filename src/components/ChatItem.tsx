@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Chat } from '../model/Chats';
 import { useAppSelector } from '../store/hooks';
+import Button from '../ui/Button';
 import { db } from '../utils/firebase';
 
 interface ChatItemProps {
@@ -22,11 +23,11 @@ function ChatItem({ item }: ChatItemProps) {
   const clickHandler = (e: React.UIEvent<HTMLLIElement>) => {
     if (e.detail === 1) {
     } else if (e.detail === 2) {
-      onDoubleClick();
+      doubleClickHandler();
     }
   };
 
-  const onDoubleClick = () => {
+  const doubleClickHandler = () => {
     // 뷰에서 즉각적인 좋아요
     setLiked(prev => !prev);
     const chatDoc = db
@@ -42,14 +43,24 @@ function ChatItem({ item }: ChatItemProps) {
     console.log(chatDoc);
   };
 
+  const deleteMessage = async () => {
+    const result = await db
+      .collection('Chatrooms')
+      .doc(roomId)
+      .collection('Chats')
+      .doc(item.id)
+      .delete();
+    console.log(result);
+  };
+
   return (
     <li style={{}} onClick={e => clickHandler(e)}>
       <div
         style={{
           textAlign: 'left',
           background: isMine
-            ? 'rgba(255, 255, 255, 0.10)'
-            : 'rgba(255, 255, 255, 0.05)',
+            ? 'rgba(255, 255, 255, 0.20)'
+            : 'rgba(255, 255, 255, 0.10)',
           margin: isMine ? '0 16px 12px 90px' : '0 90px 12px 16px',
           borderRadius: isMine ? '24px 24px 4px 24px' : 24,
           minHeight: 50,
@@ -57,11 +68,22 @@ function ChatItem({ item }: ChatItemProps) {
           padding: '16px 26px',
         }}
       >
-        <div>{item.content}</div>
+        <div>{item.content} </div>
+
         <br />
         {/* id:{item.id} */}
-
         {liked && '❤️'}
+        <br />
+        {isMine && (
+          <Button
+            variant="outlined"
+            color="default"
+            onClick={deleteMessage}
+            size="small"
+          >
+            삭제
+          </Button>
+        )}
       </div>
     </li>
   );

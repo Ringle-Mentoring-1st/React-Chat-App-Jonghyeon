@@ -41,13 +41,19 @@ function ChatPage() {
             newChat.id = change.doc.id;
             setChats(prevChats => [...prevChats, newChat]);
           } else if (change.type === 'modified') {
-            const newChat = change.doc.data() as Chat;
-            newChat.id = change.doc.id;
+            const modifiedChat = change.doc.data() as Chat;
+            modifiedChat.id = change.doc.id;
             setChats(prevChats =>
-              prevChats.map(prev => (prev.id === newChat.id ? newChat : prev))
+              prevChats.map(prev =>
+                prev.id === modifiedChat.id ? modifiedChat : prev
+              )
             );
           } else if (change.type === 'removed') {
-            console.log(change, change.type);
+            const removedChat = change.doc.data() as Chat;
+            removedChat.id = change.doc.id;
+            setChats(prevChats =>
+              prevChats.filter(prev => prev.id !== removedChat.id)
+            );
           }
         });
       });
@@ -89,7 +95,11 @@ function ChatPage() {
         <span>
           나와{' '}
           {livePeople.map(person =>
-            person.uid === uid ? '' : <span>{person.nickName}님 </span>
+            person.uid === uid ? (
+              ''
+            ) : (
+              <span key={person.uid}>{person.nickName}님 </span>
+            )
           )}{' '}
           {livePeople.length}명이 지금 이방에 함께 있어요 🥳
         </span>
