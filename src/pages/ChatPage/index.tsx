@@ -7,18 +7,31 @@ import { Chat, ChatRoom, LivePerson } from '../../model/Chats';
 import ChatBottomInput from '../../components/ChatBottomInput';
 import ChatItem from '../../components/ChatItem';
 import { useAppSelector } from '../../store/hooks';
+import ChatBottomRequestAuthButton from '../../components/ChatBottomRequestAuthButton';
+import Button from '../../ui/Button';
 
 function ChatPage() {
   const { roomId }: { roomId: string } = useParams();
   const [chats, setChats] = useState<Chat[]>([]);
   const [livePeople, setLivePeople] = useState<LivePerson[]>([]);
-  const { uid, nickName } = useAppSelector(state => state.user.userProfile);
+  const nickName = useAppSelector(state => state.user.userProfile.nickName);
+  const uid = useAppSelector(state => state.user.userProfile.uid);
   const [title, setTitle] = useState('');
-
+  const [isRequested, setIsRequested] = useState(false);
+  const [authenticatedPeople, setAuthenticatedPeople] = useState<string[] | []>(
+    []
+  );
+  const [requestPeople, setRequestPeople] = useState<
+    { nickName: string; uid: string }[]
+  >([]);
+  const [chatroom, setChatroom] = useState<any>({});
   const chatroomData = async () => {
     const chatroomDoc = await db.collection('Chatrooms').doc(roomId).get();
     if (chatroomDoc.exists) {
-      setTitle(chatroomDoc.data()!.title);
+      const chatroomData = chatroomDoc.data() as ChatRoom;
+      setTitle(chatroomData.title);
+      setAuthenticatedPeople(chatroomData.authenticatedPeople);
+      setChatroom(chatroomData);
     }
     return { exist: chatroomDoc.exists };
   };
@@ -94,15 +107,83 @@ function ChatPage() {
       });
     });
 
+    // requestPeople subscribe
+    const requestPeopleRef = db
+      .collection('Chatrooms')
+      .doc(roomId)
+      .collection('requestPeople');
+    const unsubscribeRequestPeople = requestPeopleRef.onSnapshot(snapshot => {
+      snapshot.docChanges().forEach(change => {
+        if (change.type === 'added') {
+          setRequestPeople(prev => [
+            ...prev,
+            { nickName: change.doc.data().nickName, uid: change.doc.id },
+          ]);
+          if (change.doc.id === uid) setIsRequested(true);
+        } else if (change.type === 'removed') {
+          setRequestPeople(prev => {
+            const filteredPrev = prev.filter(a => a.uid !== change.doc.id);
+            return filteredPrev;
+          });
+        }
+      });
+    });
+
     return () => {
       unsubscribeChats();
       unsubscribeLivePeople();
+      unsubscribeRequestPeople();
     };
   }, []);
+
+  const requestAuthHandler = () => {
+    db.collection('Chatrooms')
+      .doc(roomId)
+      .collection('requestPeople')
+      .doc(uid)
+      .set({ nickName })
+      .then(() => {
+        setIsRequested(true);
+      });
+  };
+
+  // 내가 만든 방인지
+  const isMyroom = chatroom.creator === uid;
+
+  // 내가 권한이 있는지
+  let isAuth = false;
+  for (let uidAuth of authenticatedPeople) {
+    if (uidAuth === uid) {
+      isAuth = true;
+      break;
+    }
+  }
 
   return (
     <div style={{ paddingBottom: 70 }}>
       <h1>{title}</h1>
+      {isMyroom && requestPeople.length > 0 && (
+        <div
+          className="chatroom--active"
+          style={{ padding: '16px 0', margin: 12 }}
+        >
+          대화를 원하면 권한을 승인해주세요
+          <ul>
+            {requestPeople.map(person => (
+              <li key={person.uid}>
+                <strong>{person.nickName}</strong>
+                {'님 '}
+                <Button size="small" variant="outlined" color="secondary">
+                  거절하기
+                </Button>
+                <Button size="small" color="primary">
+                  승인하기
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {livePeople.length !== 0 ? (
         livePeople.length > 1 ? (
           <span>
@@ -122,12 +203,31 @@ function ChatPage() {
       ) : (
         ''
       )}
+
       <ul>
         {chats.map(chat => (
           <ChatItem key={chat.id} item={chat} />
         ))}
       </ul>
-      {title && <ChatBottomInput roomId={roomId} />}
+      {isAuth && title && <ChatBottomInput roomId={roomId} />}
+      {!isAuth &&
+        (!isRequested ? (
+          <div style={{ padding: '16px 0' }}>
+            <ChatBottomRequestAuthButton
+              onClick={requestAuthHandler}
+              roomId={roomId}
+            />
+          </div>
+        ) : (
+          <div className="chatroom--active" style={{ padding: '16px 0' }}>
+            <Button color="default" variant="outlined">
+              성공적으로 요청을 보냈습니다
+            </Button>
+            <br />
+            <br />
+            방장의 수락을 기다려주세요
+          </div>
+        ))}
     </div>
   );
 }

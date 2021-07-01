@@ -1,0 +1,21 @@
+.chatroom--active {
+  background: linear-gradient(-45deg, #574ac3, #e73c7e, #5e2ba7, #ebddaa);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+.chatroom {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

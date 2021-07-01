@@ -47,6 +47,7 @@ function ChatBottomInput({ roomId }: ChatBoottomInputProps) {
         alignItems: 'center',
         margin: 0,
         padding: 8,
+        paddingBottom: navigator.userAgent.includes('KAKAOTALK') ? 60 : 8,
       }}
     >
       <TextInput

@@ -5,9 +5,11 @@ import './styles.scss';
 import { ChatRoom } from '../../model/Chats';
 import RoomItem from '../../components/RoomItem';
 import { useHistory } from 'react-router-dom';
+import { useAppSelector } from '../../store/hooks';
 
 function ChatListPage() {
   const history = useHistory();
+  const uid = useAppSelector(state => state.user.userProfile.uid);
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
 
   useEffect(() => {
@@ -30,12 +32,36 @@ function ChatListPage() {
     }
   };
 
+  const filteredRoomsNotMine: ChatRoom[] = [];
+  const filteredRoomsMine = rooms.filter(room => {
+    if (room.authenticatedPeople.includes(uid)) return true;
+    else {
+      filteredRoomsNotMine.push(room);
+      return false;
+    }
+  });
+
   return !rooms.length ? (
     <div>Loading</div>
   ) : (
     <Fragment>
       <ul>
-        {rooms.map(room => (
+        {filteredRoomsMine.map(room => (
+          <RoomItem
+            onClickNotLongPress={() => {
+              history.push(`/chat/room/${room.id}`);
+            }}
+            onDelete={getChatrooms}
+            key={room.id}
+            item={room}
+          />
+        ))}
+      </ul>
+      {filteredRoomsNotMine.length > 0 && (
+        <h3>메시지 권한 얻고 챗방을 활성화하세요</h3>
+      )}
+      <ul>
+        {filteredRoomsNotMine.map(room => (
           <RoomItem
             onClickNotLongPress={() => {
               history.push(`/chat/room/${room.id}`);

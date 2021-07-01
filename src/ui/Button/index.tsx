@@ -8,6 +8,7 @@ interface ButtonProps {
   fill?: boolean;
   onClick?: () => {} | void;
   children: ReactChild | ReactChildren;
+  [x: string]: any;
 }
 
 export default function Button({

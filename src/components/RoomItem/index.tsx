@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
-import { ChatRoom } from '../model/Chats';
-import { useAppSelector } from '../store/hooks';
-import Button from '../ui/Button';
-import { db } from '../utils/firebase';
-import useMouseBehaviors from '../utils/useMouseBehaviors';
+import { ChatRoom } from '../../model/Chats';
+import { useAppSelector } from '../../store/hooks';
+import Button from '../../ui/Button';
+import { db } from '../../utils/firebase';
+import useMouseBehaviors from '../../utils/useMouseBehaviors';
+import './styles.scss';
 
 interface RoomItemProps {
   item: ChatRoom;
@@ -33,10 +34,10 @@ function RoomItem({ item, onClickNotLongPress, onDelete }: RoomItemProps) {
   return (
     <li key={item.id} style={{ display: 'flex' }}>
       <div
+        className={isAuthenticated ? 'chatroom--active' : 'chatroom'}
         {...longPress}
         style={{
           flex: 1,
-          background: 'rgba(255,255,255,0.08)',
           padding: 20,
           borderRadius: 16,
           margin: '0 12px 12px 12px',
@@ -44,8 +45,7 @@ function RoomItem({ item, onClickNotLongPress, onDelete }: RoomItemProps) {
         }}
       >
         <h2>{item.title}</h2>
-        {isAuthenticated && '참여하고 있는 방입니다.'}
-        {item.creator === uid && <p>내 챗방을 길게 눌러보세요👈</p>}
+        {item.creator === uid && <p>내가 만든 챗방을 길게 눌러보세요 👈</p>}
       </div>
 
       {isCreator && isOpen && (
