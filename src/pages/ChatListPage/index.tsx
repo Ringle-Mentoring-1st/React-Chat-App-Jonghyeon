@@ -14,24 +14,23 @@ function ChatListPage() {
     getChatrooms();
   }, []);
 
-  const getChatrooms = () => {
+  const getChatrooms = async () => {
     const result: ChatRoom[] = [];
-    db.collection('Chatrooms')
-      .get()
-      .then(collection => {
-        const myRooms = collection.docs;
-        if (myRooms.length) {
-          myRooms.forEach(roomDoc => {
-            const newData: ChatRoom = { title: '', password: '', id: '' };
-            const roomData = roomDoc.data();
-            newData.id = roomDoc.id;
-            newData.title = roomData.title;
-            newData.password = roomData.password;
-            result.push(newData);
-          });
-        }
-        setRooms(result);
-      });
+    const collection = await db.collection('Chatrooms').get();
+    if (collection.docs.length) {
+      const myRooms = collection.docs;
+      if (myRooms.length) {
+        myRooms.forEach(roomDoc => {
+          const newData: ChatRoom = { title: '', password: '', id: '' };
+          const roomData = roomDoc.data();
+          newData.id = roomDoc.id;
+          newData.title = roomData.title;
+          newData.password = roomData.password;
+          result.push(newData);
+        });
+      }
+      setRooms(result);
+    }
   };
 
   return !rooms.length ? (
