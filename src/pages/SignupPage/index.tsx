@@ -146,18 +146,21 @@ function SignupPage() {
             value={email}
             onChange={e => onChange(e, 'email')}
             placeholder="이메일을 입력해주세요"
+            fill
           />
           <TextInput
             type="password"
             value={pw}
             onChange={e => onChange(e, 'pw')}
             placeholder="비밀번호를 입력해주세요"
+            fill
           />
           <TextInput
             type="text"
             value={nickName}
             onChange={e => onChange(e, 'nickName')}
             placeholder="닉네임를 입력해주세요"
+            fill
           />
           <select
             name="pets"

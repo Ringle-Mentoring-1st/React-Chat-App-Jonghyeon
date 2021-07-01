@@ -85,12 +85,14 @@ function LoginPage() {
             value={email}
             onChange={e => emailChangeHandler(e)}
             placeholder="이메일을 입력해주세요"
+            fill
           />
           <TextInput
             type="password"
             value={pw}
             onChange={e => passwordChangeHandler(e)}
             placeholder="비밀번호를 입력해주세요"
+            fill
           />
           <Button fill color="primary">
             로그인하기
