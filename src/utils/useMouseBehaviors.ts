@@ -7,8 +7,6 @@ export default function useMouseBehaviors(
 ) {
   const [press, setPress] = useState(false);
 
-  console.log('Press:', press);
-
   useEffect(() => {
     let timerId: any; // TODO: I Can't know type 🥲 Could anyone use issue or Request in github for me?
 

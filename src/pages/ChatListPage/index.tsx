@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { db } from '../../utils/firebase';
 import './styles.scss';
 // Model
@@ -11,6 +11,10 @@ function ChatListPage() {
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
 
   useEffect(() => {
+    getChatrooms();
+  }, []);
+
+  const getChatrooms = () => {
     const result: ChatRoom[] = [];
     db.collection('Chatrooms')
       .get()
@@ -28,22 +32,26 @@ function ChatListPage() {
         }
         setRooms(result);
       });
-  }, []);
+  };
 
   return !rooms.length ? (
     <div>Loading</div>
   ) : (
-    <ul>
-      {rooms.map(room => (
-        <RoomItem
-          onClickNotLongPress={() => {
-            history.push(`/chat/room/${room.id}`);
-          }}
-          key={room.id}
-          item={room}
-        />
-      ))}
-    </ul>
+    <Fragment>
+      <ul>
+        {rooms.map(room => (
+          <RoomItem
+            onClickNotLongPress={() => {
+              history.push(`/chat/room/${room.id}`);
+            }}
+            onDelete={getChatrooms}
+            key={room.id}
+            item={room}
+          />
+        ))}
+      </ul>
+      <p>챗방을 길게 눌러 보세요</p>
+    </Fragment>
   );
 }
 
