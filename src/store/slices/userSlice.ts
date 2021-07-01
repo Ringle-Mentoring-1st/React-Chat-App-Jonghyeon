@@ -1,15 +1,16 @@
+import { UserProfile } from './../../model/Users';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
 
 interface UserState {
   jwtToken: string | null;
-  userProfile: { uid: string; nickName: string };
+  userProfile: UserProfile;
   message: string;
 }
 
 const initialState: UserState = {
   jwtToken: null,
-  userProfile: { uid: '', nickName: '' },
+  userProfile: { uid: '', nickName: '', email: '' },
   message: '',
 };
 
@@ -25,10 +26,7 @@ export const userSlice = createSlice({
     setJwtToken: (state, action: PayloadAction<string>) => {
       state.jwtToken = action.payload;
     },
-    setUserProfile: (
-      state,
-      action: PayloadAction<{ uid: string; email: string; nickName: string }>
-    ) => {
+    setUserProfile: (state, action: PayloadAction<UserProfile>) => {
       state.userProfile = action.payload;
     },
     SecondSaga: (state, action: PayloadAction<string>) => {
