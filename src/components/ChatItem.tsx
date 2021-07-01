@@ -42,7 +42,7 @@ function ChatItem({ item }: ChatItemProps) {
         break;
       }
     }
-  }, []);
+  }, [emojis]);
 
   const clickHandler = (e: React.UIEvent<HTMLLIElement>) => {
     if (e.detail === 1) {
@@ -116,7 +116,19 @@ function ChatItem({ item }: ChatItemProps) {
           padding: '16px 26px',
         }}
       >
-        <div>{item.content} </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {item.content}
+          {isMine && (
+            <Button
+              variant="outlined"
+              color="default"
+              onClick={deleteMessage}
+              size="small"
+            >
+              삭제
+            </Button>
+          )}
+        </div>
 
         <br />
         {/* id:{item.id} */}
@@ -126,17 +138,6 @@ function ChatItem({ item }: ChatItemProps) {
             {' '}
             <EmojiSet emojis={emojis} onClickEmoji={clickEmojiHandler} />
           </div>
-        )}
-        <br />
-        {isMine && (
-          <Button
-            variant="outlined"
-            color="default"
-            onClick={deleteMessage}
-            size="small"
-          >
-            삭제
-          </Button>
         )}
       </div>
     </li>

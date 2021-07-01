@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './styles.scss';
 import { db, nowSecond } from '../../utils/firebase';
-import { Chat, LivePerson } from '../../model/Chats';
+import { Chat, ChatRoom, LivePerson } from '../../model/Chats';
 
 import ChatBottomInput from '../../components/ChatBottomInput';
 import ChatItem from '../../components/ChatItem';
@@ -13,8 +13,19 @@ function ChatPage() {
   const [chats, setChats] = useState<Chat[]>([]);
   const [livePeople, setLivePeople] = useState<LivePerson[]>([]);
   const { uid, nickName } = useAppSelector(state => state.user.userProfile);
+  const [title, setTitle] = useState('');
+
+  const chatroomData = async () => {
+    const chatroomDoc = await db.collection('Chatrooms').doc(roomId).get();
+    if (chatroomDoc.exists) {
+      setTitle(chatroomDoc.data()!.title);
+    }
+    return { exist: chatroomDoc.exists };
+  };
 
   useEffect(() => {
+    chatroomData();
+
     // 시작시 라이브 피플에 추가
     const livePeopleRef = db
       .collection('Chatrooms')
@@ -91,29 +102,32 @@ function ChatPage() {
 
   return (
     <div style={{ paddingBottom: 70 }}>
-      {livePeople.length > 1 ? (
-        <span>
-          나와{' '}
-          {livePeople.map(person =>
-            person.uid === uid ? (
-              ''
-            ) : (
-              <span key={person.uid}>{person.nickName}님 </span>
-            )
-          )}{' '}
-          {livePeople.length}명이 지금 이방에 함께 있어요 🥳
-        </span>
+      <h1>{title}</h1>
+      {livePeople.length !== 0 ? (
+        livePeople.length > 1 ? (
+          <span>
+            나와{' '}
+            {livePeople.map(person =>
+              person.uid === uid ? (
+                ''
+              ) : (
+                <span key={person.uid}>{person.nickName}님 </span>
+              )
+            )}{' '}
+            {livePeople.length}명이 지금 이방에 함께 있어요 🥳
+          </span>
+        ) : (
+          '지금 이 방에 나만 있어요 😂'
+        )
       ) : (
-        '지금 이 방에 나만 있어요 😂'
+        ''
       )}
-
-      <h1>ChatPage</h1>
       <ul>
         {chats.map(chat => (
           <ChatItem key={chat.id} item={chat} />
         ))}
       </ul>
-      <ChatBottomInput roomId={roomId} />
+      {title && <ChatBottomInput roomId={roomId} />}
     </div>
   );
 }

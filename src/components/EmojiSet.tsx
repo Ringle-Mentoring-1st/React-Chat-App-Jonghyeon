@@ -15,6 +15,7 @@ function EmojiSet({ emojis, onClickEmoji }: EmojiSetProps) {
             style={{
               background: 'rgba(255,255,255, 0.1)',
               padding: '6px 12px',
+              marginRight: 6,
               borderRadius: 12,
             }}
           >
