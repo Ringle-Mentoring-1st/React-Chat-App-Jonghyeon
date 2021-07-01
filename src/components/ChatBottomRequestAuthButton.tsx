@@ -12,7 +12,9 @@ function ChatBottomRequestAuthButton({
 }: ChatBottomRequestAuthButtonProps) {
   return (
     <>
-      <Button onClick={onClick}>나랑도 이야기 해요</Button>
+      <Button color="primary" onClick={onClick}>
+        나랑도 이야기 해요
+      </Button>
       <br />
       승인되면 이야기 할 수 있습니다.
     </>

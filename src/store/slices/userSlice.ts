@@ -3,13 +3,13 @@ import type { RootState } from '../index';
 
 interface UserState {
   jwtToken: string | null;
-  userProfile: any | null;
+  userProfile: { uid: string; nickName: string };
   message: string;
 }
 
 const initialState: UserState = {
   jwtToken: null,
-  userProfile: null,
+  userProfile: { uid: '', nickName: '' },
   message: '',
 };
 

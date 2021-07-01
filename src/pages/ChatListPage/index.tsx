@@ -9,7 +9,7 @@ import { useAppSelector } from '../../store/hooks';
 
 function ChatListPage() {
   const history = useHistory();
-  const uid = useAppSelector(state => state.user.userProfile.uid);
+  const { uid } = useAppSelector(state => state.user.userProfile);
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
 
   useEffect(() => {
