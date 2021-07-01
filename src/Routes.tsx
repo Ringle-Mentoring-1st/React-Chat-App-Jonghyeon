@@ -18,7 +18,7 @@ function Routes() {
   const userProfile = useAppSelector(state => state.user.userProfile);
   return (
     <Router>
-      {userProfile && <NavBar />}
+      {userProfile.uid && <NavBar />}
       <Container>
         <Switch>
           <Route path="/" component={Home} exact />
