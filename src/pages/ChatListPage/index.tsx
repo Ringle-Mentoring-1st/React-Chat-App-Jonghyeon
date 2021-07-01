@@ -4,8 +4,10 @@ import './styles.scss';
 // Model
 import { ChatRoom } from '../../model/Chats';
 import RoomItem from '../../components/RoomItem';
+import { useHistory } from 'react-router-dom';
 
 function ChatListPage() {
+  const history = useHistory();
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
 
   useEffect(() => {
@@ -33,7 +35,13 @@ function ChatListPage() {
   ) : (
     <ul>
       {rooms.map(room => (
-        <RoomItem key={room.id} item={room} />
+        <RoomItem
+          onClickNotLongPress={() => {
+            history.push(`/chat/room/${room.id}`);
+          }}
+          key={room.id}
+          item={room}
+        />
       ))}
     </ul>
   );
