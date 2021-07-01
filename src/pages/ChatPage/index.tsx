@@ -90,7 +90,7 @@ function ChatPage() {
   }, []);
 
   return (
-    <div>
+    <div style={{ paddingBottom: 70 }}>
       {livePeople.length > 1 ? (
         <span>
           나와{' '}

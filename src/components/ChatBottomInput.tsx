@@ -18,6 +18,7 @@ function ChatBottomInput({ roomId }: ChatBoottomInputProps) {
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const newChat = {
       content,
       createdAt: nowSecond(),
@@ -35,10 +36,26 @@ function ChatBottomInput({ roomId }: ChatBoottomInputProps) {
   return (
     <form
       onSubmit={submitHandler}
-      style={{ background: 'rgba(255,255,255,0.02)', padding: 16 }}
+      style={{
+        display: 'flex',
+        background: '#222222',
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+        margin: 0,
+        padding: 8,
+      }}
     >
-      <TextInput type="text" value={content} onChange={changeHandler} />{' '}
-      <Button color="primary">보내기</Button>
+      <TextInput
+        type="text"
+        value={content}
+        onChange={changeHandler}
+        placeholder="여기에 메시지를 입력하세요"
+        style={{ flex: 1, margin: 0 }}
+      />{' '}
+      {content.length > 0 && <Button color="primary">보내기</Button>}
     </form>
   );
 }
