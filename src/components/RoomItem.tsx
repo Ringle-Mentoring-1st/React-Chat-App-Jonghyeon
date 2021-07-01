@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { ChatRoom } from '../model/Chats';
+import { useAppSelector } from '../store/hooks';
 import Button from '../ui/Button';
 import { db } from '../utils/firebase';
 import useMouseBehaviors from '../utils/useMouseBehaviors';
@@ -13,6 +14,7 @@ interface RoomItemProps {
 
 function RoomItem({ item, onClickNotLongPress, onDelete }: RoomItemProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const uid = useAppSelector(state => state.user.userProfile.uid);
 
   const longPress = useMouseBehaviors(
     onClickNotLongPress,
@@ -21,9 +23,12 @@ function RoomItem({ item, onClickNotLongPress, onDelete }: RoomItemProps) {
   );
 
   const deleteHandler = async () => {
-    const result = await db.collection('Chatrooms').doc(item.id).delete();
+    await db.collection('Chatrooms').doc(item.id).delete();
     onDelete();
   };
+
+  const isAuthenticated = item.authenticatedPeople.includes(uid);
+  const isCreator = item.creator === uid;
 
   return (
     <li key={item.id} style={{ display: 'flex' }}>
@@ -39,15 +44,12 @@ function RoomItem({ item, onClickNotLongPress, onDelete }: RoomItemProps) {
         }}
       >
         <h2>{item.title}</h2>
-        {item.id}
+        {isAuthenticated && '참여하고 있는 방입니다.'}
+        {item.creator === uid && <p>내 챗방을 길게 눌러보세요👈</p>}
       </div>
-      {isOpen && (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+
+      {isCreator && isOpen && (
+        <div>
           <Button
             onClick={deleteHandler}
             variant="outlined"

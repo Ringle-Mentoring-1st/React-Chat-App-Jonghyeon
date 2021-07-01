@@ -21,11 +21,8 @@ function ChatListPage() {
       const myRooms = collection.docs;
       if (myRooms.length) {
         myRooms.forEach(roomDoc => {
-          const newData: ChatRoom = { title: '', password: '', id: '' };
-          const roomData = roomDoc.data();
+          const newData = roomDoc.data() as ChatRoom;
           newData.id = roomDoc.id;
-          newData.title = roomData.title;
-          newData.password = roomData.password;
           result.push(newData);
         });
       }
@@ -49,7 +46,6 @@ function ChatListPage() {
           />
         ))}
       </ul>
-      <p>챗방을 길게 눌러 보세요</p>
     </Fragment>
   );
 }

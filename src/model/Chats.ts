@@ -2,6 +2,9 @@ export interface ChatRoom {
   title: string;
   password: string;
   id: string;
+  createdAt: number;
+  creator: string;
+  authenticatedPeople: string[];
 }
 export interface Chat {
   content: string;
