@@ -13,9 +13,7 @@ interface ChatItemProps {
 
 function ChatItem({ item }: ChatItemProps) {
   const { roomId }: { roomId: string } = useParams();
-  const { uid: reduxUid, nickName } = useAppSelector(
-    state => state.user.userProfile
-  );
+  const { uid: reduxUid } = useAppSelector(state => state.user.userProfile);
   const isMine = reduxUid === item.uid;
   const [liked, setLiked] = useState(false);
   const [emojis, setEmojis] = useState({});
@@ -103,18 +101,26 @@ function ChatItem({ item }: ChatItemProps) {
   return (
     <li style={{}} onClick={e => clickHandler(e)}>
       <div
+        className={item.isSpecial ? 'chatroom--active' : ''}
         {...longPress}
-        style={{
-          textAlign: 'left',
-          background: isMine
-            ? 'rgba(255, 255, 255, 0.20)'
-            : 'rgba(255, 255, 255, 0.10)',
-          margin: isMine ? '0 16px 12px 90px' : '0 90px 12px 16px',
-          borderRadius: isMine ? '24px 24px 4px 24px' : 24,
-          minHeight: 50,
-          minWidth: 100,
-          padding: '16px 26px',
-        }}
+        style={
+          item.isSpecial
+            ? {
+                textAlign: 'left',
+                margin: isMine ? '0 16px 12px 90px' : '0 90px 12px 16px',
+                borderRadius: isMine ? '24px 24px 4px 24px' : 24,
+                minWidth: 100,
+                padding: '16px 26px',
+              }
+            : {
+                textAlign: 'left',
+                background: isMine ? '#5f5cee' : 'rgba(255, 255, 255, 0.10)',
+                margin: isMine ? '0 16px 12px 90px' : '0 90px 12px 16px',
+                borderRadius: isMine ? '24px 24px 4px 24px' : 24,
+                minWidth: 100,
+                padding: '16px 26px',
+              }
+        }
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           {item.content}

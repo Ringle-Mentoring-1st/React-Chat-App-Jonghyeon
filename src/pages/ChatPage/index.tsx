@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './styles.scss';
-import { db, nowSecond } from '../../utils/firebase';
+import { db, nowSecond, firebase } from '../../utils/firebase';
 import { Chat, ChatRoom, LivePerson } from '../../model/Chats';
 
 import ChatBottomInput from '../../components/ChatBottomInput';
@@ -16,34 +16,25 @@ function ChatPage() {
   const [livePeople, setLivePeople] = useState<LivePerson[]>([]);
   const nickName = useAppSelector(state => state.user.userProfile.nickName);
   const uid = useAppSelector(state => state.user.userProfile.uid);
-  const [title, setTitle] = useState('');
   const [isRequested, setIsRequested] = useState(false);
-  const [authenticatedPeople, setAuthenticatedPeople] = useState<string[] | []>(
-    []
-  );
   const [requestPeople, setRequestPeople] = useState<
     { nickName: string; uid: string }[]
   >([]);
-  const [chatroom, setChatroom] = useState<any>({});
-  const chatroomData = async () => {
-    const chatroomDoc = await db.collection('Chatrooms').doc(roomId).get();
-    if (chatroomDoc.exists) {
-      const chatroomData = chatroomDoc.data() as ChatRoom;
-      setTitle(chatroomData.title);
-      setAuthenticatedPeople(chatroomData.authenticatedPeople);
-      setChatroom(chatroomData);
-    }
-    return { exist: chatroomDoc.exists };
-  };
+  const [chatroom, setChatroom] = useState<any>({ authenticatedPeople: [] });
 
   useEffect(() => {
-    chatroomData();
+    db.collection('Chatrooms')
+      .doc(roomId)
+      .onSnapshot(doc => {
+        setChatroom(doc.data());
+      });
 
     // 시작시 라이브 피플에 추가
     const livePeopleRef = db
       .collection('Chatrooms')
       .doc(roomId)
       .collection('livePeople');
+
     livePeopleRef
       .doc(uid)
       .set({ nickName, liveAt: nowSecond() })
@@ -147,12 +138,50 @@ function ChatPage() {
       });
   };
 
+  // 권한요청 승인, 거절
+  const roomDocRef = db.collection('Chatrooms').doc(roomId);
+  const requestPeopleRef = roomDocRef.collection('requestPeople');
+  const rejectRequest = (person: { nickName: string; uid: string }) => {
+    requestPeopleRef.doc(person.uid).delete();
+  };
+  const acceptRequest = (person: { nickName: string; uid: string }) => {
+    requestPeopleRef
+      .doc(person.uid)
+      .delete()
+      .then(() => {
+        roomDocRef
+          .update({
+            authenticatedPeople: firebase.firestore.FieldValue.arrayUnion(
+              person.uid
+            ),
+          })
+          .then(() => {
+            console.log('hi');
+
+            roomDocRef
+              .collection('Chats')
+              .add({
+                content:
+                  person.nickName +
+                  '님 승인했습니당! 🥳 이제부터 메시지를 보낼 수 있어요!',
+                createdAt: nowSecond(),
+                uid,
+                emojis: { '🥳': {}, '🚀': {}, '👍': {}, '👋': {} },
+                isSpecial: true,
+              })
+              .then(() => {
+                console.log('성공');
+              });
+          });
+      });
+  };
+
   // 내가 만든 방인지
   const isMyroom = chatroom.creator === uid;
 
   // 내가 권한이 있는지
   let isAuth = false;
-  for (let uidAuth of authenticatedPeople) {
+  for (let uidAuth of chatroom.authenticatedPeople) {
     if (uidAuth === uid) {
       isAuth = true;
       break;
@@ -161,7 +190,7 @@ function ChatPage() {
 
   return (
     <div style={{ paddingBottom: 70 }}>
-      <h1>{title}</h1>
+      <h1>{chatroom.title}</h1>
       {isMyroom && requestPeople.length > 0 && (
         <div
           className="chatroom--active"
@@ -173,10 +202,19 @@ function ChatPage() {
               <li key={person.uid}>
                 <strong>{person.nickName}</strong>
                 {'님 '}
-                <Button size="small" variant="outlined" color="secondary">
+                <Button
+                  onClick={() => rejectRequest(person)}
+                  size="small"
+                  variant="outlined"
+                  color="secondary"
+                >
                   거절하기
                 </Button>
-                <Button size="small" color="primary">
+                <Button
+                  onClick={() => acceptRequest(person)}
+                  size="small"
+                  color="primary"
+                >
                   승인하기
                 </Button>
               </li>
@@ -209,7 +247,7 @@ function ChatPage() {
           <ChatItem key={chat.id} item={chat} />
         ))}
       </ul>
-      {isAuth && title && <ChatBottomInput roomId={roomId} />}
+      {isAuth && chatroom.title && <ChatBottomInput roomId={roomId} />}
       {!isAuth &&
         (!isRequested ? (
           <div style={{ padding: '16px 0' }}>

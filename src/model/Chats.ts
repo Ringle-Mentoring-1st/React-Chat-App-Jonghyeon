@@ -13,6 +13,7 @@ export interface Chat {
   id?: string;
   liked: boolean;
   emojis: { [key: string]: { [uid: string]: boolean } };
+  isSpecial?: boolean;
 }
 
 export interface LivePerson {
