@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './styles.scss';
-import { db } from '../../utils/firebase';
+import { db, nowSecond } from '../../utils/firebase';
 import { Chat } from '../../model/Chats';
 
 import ChatBottomInput from '../../components/ChatBottomInput';
@@ -24,7 +24,7 @@ function ChatPage() {
       .collection('livePeople');
     livePeopleRef
       .doc(uid)
-      .set({ nickName })
+      .set({ nickName, liveAt: nowSecond() })
       .then(() => {});
 
     return () => {

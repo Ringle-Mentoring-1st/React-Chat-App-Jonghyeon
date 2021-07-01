@@ -20,7 +20,7 @@ function ChatBottomInput({ roomId }: ChatBoottomInputProps) {
     e.preventDefault();
     const newChat = {
       content,
-      createdAt: nowSecond,
+      createdAt: nowSecond(),
       uid,
     };
     db.doc(`Chatrooms/${roomId}`)
