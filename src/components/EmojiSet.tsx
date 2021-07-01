@@ -1,4 +1,5 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
+import { useAppSelector } from '../store/hooks';
 
 interface EmojiSetProps {
   emojis: { [key: string]: any };
@@ -6,7 +7,10 @@ interface EmojiSetProps {
 }
 
 function EmojiSet({ emojis, onClickEmoji }: EmojiSetProps) {
-  console.log('render');
+  const userProfile = useAppSelector(state => state.user.userProfile);
+  useEffect(() => {
+    console.log('use Memo render');
+  }, []);
 
   return (
     <div>
@@ -17,13 +21,16 @@ function EmojiSet({ emojis, onClickEmoji }: EmojiSetProps) {
             key={key}
             onClick={() => onClickEmoji(key)}
             style={{
-              background: 'rgba(255,255,255, 0.1)',
+              background: emojis[key][userProfile.uid]
+                ? 'rgba(255,255,255, 0.4)'
+                : 'rgba(255,255,255, 0.1)',
               padding: '6px 12px',
               marginRight: 6,
               borderRadius: 12,
             }}
           >
-            {key} {'  '}{' '}
+            {key}
+            {'  '}
             {Object.keys(emojis[key]).length
               ? Object.keys(emojis[key]).length
               : ''}
