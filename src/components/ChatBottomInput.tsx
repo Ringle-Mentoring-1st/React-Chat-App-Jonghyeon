@@ -23,6 +23,7 @@ function ChatBottomInput({ roomId }: ChatBoottomInputProps) {
       content,
       createdAt: nowSecond(),
       uid,
+      emojis: { '🥳': {}, '🚀': {}, '👍': {}, '👋': {} },
     };
     db.doc(`Chatrooms/${roomId}`)
       .collection('Chats')

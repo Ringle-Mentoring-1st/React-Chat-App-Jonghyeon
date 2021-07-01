@@ -4,6 +4,8 @@ import { Chat } from '../model/Chats';
 import { useAppSelector } from '../store/hooks';
 import Button from '../ui/Button';
 import { db } from '../utils/firebase';
+import useMouseBehaviors from '../utils/useMouseBehaviors';
+import EmojiSet from './EmojiSet';
 
 interface ChatItemProps {
   item: Chat;
@@ -11,14 +13,36 @@ interface ChatItemProps {
 
 function ChatItem({ item }: ChatItemProps) {
   const { roomId }: { roomId: string } = useParams();
-  const { uid: reduxUid } = useAppSelector(state => state.user.userProfile);
+  const { uid: reduxUid, nickName } = useAppSelector(
+    state => state.user.userProfile
+  );
   const isMine = reduxUid === item.uid;
   const [liked, setLiked] = useState(false);
+  const [emojis, setEmojis] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
+
+  const longPress = useMouseBehaviors(
+    () => {
+      console.log('click');
+    },
+    () => setIsOpen(prev => !prev),
+    500
+  );
 
   useEffect(() => {
-    setLiked(item.liked);
     // 내용 계속 업데이트
+    setLiked(item.liked);
+    setEmojis(item.emojis);
   });
+
+  useEffect(() => {
+    for (let emojiKey in item.emojis) {
+      for (let key in item.emojis[emojiKey]) {
+        setIsOpen(true);
+        break;
+      }
+    }
+  }, []);
 
   const clickHandler = (e: React.UIEvent<HTMLLIElement>) => {
     if (e.detail === 1) {
@@ -53,9 +77,33 @@ function ChatItem({ item }: ChatItemProps) {
     console.log(result);
   };
 
+  const clickEmojiHandler = async (keyEmoji: string) => {
+    const docRef = db
+      .collection('Chatrooms')
+      .doc(roomId)
+      .collection('Chats')
+      .doc(item.id);
+    const result = await docRef.get();
+    if (result.exists) {
+      const oldChatData = result.data() as Chat;
+      const newChatData = { ...oldChatData };
+      const isMyEmoji = oldChatData.emojis[keyEmoji][reduxUid];
+
+      if (isMyEmoji) {
+        delete newChatData.emojis[keyEmoji][reduxUid];
+      } else {
+        newChatData.emojis[keyEmoji][reduxUid] = !isMyEmoji;
+      }
+      console.log(newChatData, isMyEmoji);
+
+      result.ref.update(newChatData);
+    }
+  };
+
   return (
     <li style={{}} onClick={e => clickHandler(e)}>
       <div
+        {...longPress}
         style={{
           textAlign: 'left',
           background: isMine
@@ -73,6 +121,12 @@ function ChatItem({ item }: ChatItemProps) {
         <br />
         {/* id:{item.id} */}
         {liked && '❤️'}
+        {isOpen && (
+          <div>
+            {' '}
+            <EmojiSet emojis={emojis} onClickEmoji={clickEmojiHandler} />
+          </div>
+        )}
         <br />
         {isMine && (
           <Button

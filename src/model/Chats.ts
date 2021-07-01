@@ -12,6 +12,7 @@ export interface Chat {
   createdAt: number;
   id?: string;
   liked: boolean;
+  emojis: { [key: string]: { [uid: string]: boolean } };
 }
 
 export interface LivePerson {
