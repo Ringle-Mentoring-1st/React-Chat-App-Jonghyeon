@@ -1,9 +1,13 @@
+import { memo } from 'react';
+
 interface EmojiSetProps {
   emojis: { [key: string]: any };
   onClickEmoji: (keyEmoji: string) => {} | void;
 }
 
 function EmojiSet({ emojis, onClickEmoji }: EmojiSetProps) {
+  console.log('render');
+
   return (
     <div>
       {Object.keys(emojis)
@@ -29,4 +33,4 @@ function EmojiSet({ emojis, onClickEmoji }: EmojiSetProps) {
   );
 }
 
-export default EmojiSet;
+export default memo(EmojiSet);
