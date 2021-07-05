@@ -1,26 +1,13 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './styles.scss';
-// Redux
-import { useAppDispatch } from '../../store/hooks';
-import { logout } from '../../store/slices/userSlice';
 // Assets
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 // Components
 import Button from '../../ui/Button';
-// Utils
-import { app } from '../../utils/firebase';
+import LogoutButton from '../LogoutButton';
 
 function NavBar() {
-  const history = useHistory();
-  const dispatch = useAppDispatch();
-
-  const logOut = () => {
-    app.auth().signOut();
-    dispatch(logout());
-    history.push('/');
-  };
-
   return (
     <nav
       style={{
@@ -50,14 +37,7 @@ function NavBar() {
           </Link>
         </li>
         <li>
-          <Button
-            variant="outlined"
-            color="primary"
-            size="small"
-            onClick={logOut}
-          >
-            로그아웃
-          </Button>
+          <LogoutButton />
         </li>
       </ul>
     </nav>
