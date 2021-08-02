@@ -1,44 +1,41 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
-## Available Scripts
+# Coffee Chat
 
-In the project directory, you can run:
+**Open chatting service using emoji frequently**
 
-### `yarn start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 1. Main functionalities
+1. Create Chatroom
+2. Send a message in realtime
+3. Send Emoji, Like in realtime
+4. Login, Signup
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+|Intro|Chatroom|
+|-|-|
+|<image width="400" src="https://user-images.githubusercontent.com/61593290/127867667-2bd95b89-da9a-4a19-bf6e-e68f501b4c38.png">|<image width="400" src="https://user-images.githubusercontent.com/61593290/127860651-51da5252-99ef-4342-a05e-820ab3e430ea.png">|
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+  
+## 2. Details
+  1. **Request / Accept authentication for chat** <br>
+   Emoji can be sent by non-auth users, but message need auth to be sent
+  
+  
+  2. **Realtime count check who is in chatroom now** <br>
+     If some user arrive in this chatroom, Different text will appear
+    
+||||||
+|-|-|-|-|-|
+|<image width="400" src="https://user-images.githubusercontent.com/61593290/127864514-c3832b68-5b3a-40f5-b71c-770be2537335.png">|<image width="400" src="https://user-images.githubusercontent.com/61593290/127865576-9235ccf9-31ee-4756-89d7-241320814cff.png">|<image width="400" src="https://user-images.githubusercontent.com/61593290/127867229-247d3983-c481-4b7f-a5b2-55f655df5f74.png">|<image width="400" src="https://user-images.githubusercontent.com/61593290/127864674-c5ec6346-70f4-4932-a246-97268653b774.png">|<image width="400" src="https://user-images.githubusercontent.com/61593290/127867474-8757a088-311e-4957-a885-11f2da41e423.png">|
+|Owner create Chatroom|Guest can see "Chat with me" button|Guest requested auth to send message by clicking the button|Owner can see modal to click approval or refusing|If owner click approval, Guest can send message|
+ 
+  
+## 3. Tech used
+- React
+- TypeScript
+- Redux-toolkit
+- Redux-Persist
+- SCSS
+- Firebase (Firestore, Authentication, Hosting)
+  
+## 4. Links
+- [CoffeeChat](https://react-chat-app-54dc8.web.app)
